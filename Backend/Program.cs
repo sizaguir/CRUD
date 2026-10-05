@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Base de Datos en Memoria
-builder.Services.AddDbContext<PersonaDb>(opt => opt.UseInMemoryDatabase("PersonasList"));
+// Base de Datos
+builder.Services.AddDbContext<PersonaDb>(opt => opt.UseSqlite("Data Source=agenda.db"));
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowReact", policy => 
@@ -11,36 +11,43 @@ builder.Services.AddCors(options => {
 });
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope()) {
+    var db = scope.ServiceProvider.GetRequiredService<PersonaDb>();
+    db.Database.EnsureCreated();
+}
 app.UseCors("AllowReact");
 
-
 // CRUD
-
+// Leer (Listar)
 app.MapGet("/personas", async (PersonaDb db) => await db.Personas.ToListAsync());
 
+// Crear (Agregar)
 app.MapPost("/personas", async (Persona persona, PersonaDb db) => {
     db.Personas.Add(persona);
     await db.SaveChangesAsync();
     return Results.Created($"/personas/{persona.Id}", persona);
 });
 
-app.MapPut("/personas/{id}", async (int id, Persona input, PersonaDb db) => {
+// Actualizar (Editar)
+app.MapPut("/personas/{id}", async (int id, Persona modificada, PersonaDb db) => {
     var persona = await db.Personas.FindAsync(id);
     if (persona is null) return Results.NotFound();
     
-    persona.Nombre = input.Nombre;
-    persona.Apellido = input.Apellido;
+    persona.Nombre = modificada.Nombre;
+    persona.Apellido = modificada.Apellido;
     await db.SaveChangesAsync();
+    
     return Results.NoContent();
 });
 
+// eliminar (Borrar)
 app.MapDelete("/personas/{id}", async (int id, PersonaDb db) => {
     var persona = await db.Personas.FindAsync(id);
     if (persona is null) return Results.NotFound();
     
     db.Personas.Remove(persona);
-    await db.SaveChangesAsync();
-    return Results.Ok(persona);
+    await db.SaveChangesAsync();    
+    return Results.NoContent();
 });
 
 app.Run();
@@ -54,7 +61,6 @@ public class Persona {
 }
 
 public class PersonaDb : DbContext {
-    // Aquí están los otros tipos que faltaban entre < >
     public PersonaDb(DbContextOptions options) : base(options) { }
     public DbSet<Persona> Personas => Set<Persona>();
 }
