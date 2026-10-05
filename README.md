@@ -1,4 +1,4 @@
-# Agenda CRUD - React & .NET 8
+# CRUD - React & .NET 8
 
 Este proyecto es una aplicación web que permite gestionar una agenda de personas mediante operaciones CRUD completas (Crear, Leer, Actualizar y Eliminar). Está diseñado con una interfaz limpia y utiliza persistencia de datos.
 
