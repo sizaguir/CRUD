@@ -42,3 +42,5 @@ Levanta el servidor de desarrollo:
 npm run dev
 ```
 La terminal te dará un enlace local (generalmente http://localhost:5173). Abre ese enlace en tu navegador web para empezar a usar la aplicación.
+
+**Nota sobre la arquitectura de datos:** Para esta fase del proyecto se ha implementado SQLite de forma temporal como base de datos local. Esta decisión garantiza que el repositorio sea ejecutable de inmediato, evitando configurar servidores externos o manejar credenciales en la nube. La estructura con Entity Framework está diseñada para facilitar una futura migración a un entorno en la nube (como MySQL) cuando se realice el despliegue a producción.
