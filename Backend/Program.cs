@@ -3,7 +3,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Base de Datos
-builder.Services.AddDbContext<PersonaDb>(opt => opt.UseSqlite("Data Source=agenda.db"));
+var Conexion = builder.Configuration.GetConnectionString("ConexionMySQL");
+builder.Services.AddDbContext<PersonaDb>(opt => 
+    opt.UseMySql(Conexion, ServerVersion.AutoDetect(Conexion))
+);
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowReact", policy => 
