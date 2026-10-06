@@ -42,8 +42,9 @@ li {
 
 /* Fondo blanco*/
 body {
-  background-color: #6e6e8a;
+  background-color: #ffffff;
   color: #333333;
+  min-height: 100vh;
 }
 
 /* Caja principal */
@@ -66,8 +67,7 @@ h1 {
 /* Cajas de texto */
 input {
   background-color: #f8f9fa;
-  color: #000000;
-  border: 2px solid #d1d5db;
+  color: #000000; 
   border-radius: 8px;
   padding: 12px 15px; 
   font-size: 16px;
